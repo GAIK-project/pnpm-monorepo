@@ -1,0 +1,24 @@
+{
+  "name": "monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:fastapi": "cd apps/fastapi && python -m uvicorn main:app --reload",
+    "dev:web": "cd apps/web && pnpm dev",
+    "dev:express": "cd apps/express && pnpm dev",
+    "dev": "concurrently \"pnpm dev:fastapi\" \"pnpm dev:web\" \"pnpm dev:express\"",
+    "build": "pnpm build:js && pnpm build:python",
+    "install:all": "pnpm install && pnpm install:apps",
+    "install:apps": "pnpm --filter express-api install && pnpm --filter web install && cd apps/fastapi && python -m pip install -r requirements.txt",
+    "install:web": "pnpm --filter web install",
+    "install:express": "pnpm --filter express-api install",
+    "build:js": "pnpm -r --filter=\"./packages/**\" build && pnpm -r --filter=\"./apps/express\" build && pnpm -r --filter=\"./apps/web\" build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
